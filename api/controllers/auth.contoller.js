@@ -1,7 +1,8 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs"
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
 
     const { username, email, password } = req.body;
     const hashedPassword = bcryptjs.hashSync(password, 10)
@@ -13,10 +14,7 @@ export const signup = async (req, res) => {
 
     }
     catch (error) {
-        const fieldName = Object.keys(error.keyPattern)[0]; // 'username'
-        res.status(500).json(`${fieldName} already exists in the system`);
-
-
+        next(errorHandler(550, "error from the function"))
 
     }
 
