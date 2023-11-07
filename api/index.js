@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_CS).then(() => {
 
 
 //Connection to expressJs//
-
+const app = express();
 app.use(express.json()); //allows json as the input of the server
 app.listen(3000, () => { //Declaring on what port to listen ( in our case its 3000-mongoDB)
   console.log("Listening on port 3000 : Great success");
@@ -27,7 +27,7 @@ app.listen(3000, () => { //Declaring on what port to listen ( in our case its 30
 
 
 app.use("/api/user", userRouter);
-app.use("/api/auth", authRouter);//As the address that's been fires starts with /api/user => move on to that route
+app.use("/api/auth", authRouter);// telling the app to use the authRouter for any routes that are prefixed with /api/auth
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "internal server error";

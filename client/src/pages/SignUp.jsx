@@ -5,6 +5,7 @@ export default function Signout() {
   const [error, SetError] = useState(null);
   const [loading, SetLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -14,6 +15,9 @@ export default function Signout() {
     try {
       SetLoading(true);
       const res = await fetch("/api/auth/signup", {
+        // The fetch call triggers the app.use("/api/auth",authRouter) from the index.js in the api side.
+        //It send a POST request with a content type header and a body. The body is a strigified json data which in our case is formData that we took as a state.
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,7 +25,11 @@ export default function Signout() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json(); // This will parse the JSON response body
+      const data = await res.json(); //data is used to extract an error message if the request was not successful (i.e., res.ok is false).
+      // If there is an error, it throws an error with the message from data.
+      // This error is then caught in the catch block, where SetError is called with the message from the error,
+      //allowing it to be displayed to the user. If there is no error, it implies the operation was successful,
+      // and the navigation to the sign-in route is triggered.
 
       if (!res.ok) {
         // Check if the error message is in the expected format and use it
