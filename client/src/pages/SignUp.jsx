@@ -30,20 +30,19 @@ export default function Signout() {
       // This error is then caught in the catch block, where SetError is called with the message from the error,
       //allowing it to be displayed to the user. If there is no error, it implies the operation was successful,
       // and the navigation to the sign-in route is triggered.
-
-      if (!res.ok) {
-        // Check if the error message is in the expected format and use it
-        const errorMessage = data.message || "An unknown error occurred.";
-        throw new Error(errorMessage);
+      console.log(data);
+      if (data.success === false) {
+        SetLoading(false);
+        SetError(data.message);
+        return;
       }
-
-      // If we get here, there was no error
+      SetLoading(false);
       SetError(null);
+
       navigate("/sign-in");
     } catch (error) {
       // Set the error message from the catch block
       SetError(error.message);
-    } finally {
       SetLoading(false);
     }
   };
