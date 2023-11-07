@@ -1,11 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [error, SetError] = useState(null);
-  const [loading, SetLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -14,7 +20,8 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      SetLoading(true);
+      dispatch(signInStart());
+
       const res = await fetch("/api/auth/signin", {
         // The fetch call triggers the app.use("/api/auth",authRouter) from the index.js in the api side.
         //It send a POST request with a content type header and a body. The body is a strigified json data which in our case is formData that we took as a state.
@@ -33,18 +40,15 @@ export default function SignIn() {
       // and the navigation to the sign-in route is triggered.
       console.log(data);
       if (data.success === false) {
-        SetLoading(false);
-        SetError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
-      SetLoading(false);
-      SetError(null);
+      dispatch(signInSuccess(data.message));
 
       navigate("/");
     } catch (error) {
       // Set the error message from the catch block
-      SetError(error.message);
-      SetLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
 
