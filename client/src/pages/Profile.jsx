@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
+////////////////////////////////////////////////////////////////
 
 export default function Profile() {
   const fileRef = useRef(null);
